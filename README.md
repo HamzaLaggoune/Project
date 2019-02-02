@@ -12,13 +12,15 @@ We will be using Python 2.7.14 and Scikit-learn library.
 
 <b>Running the code : </b>
 
-<code>Winpty python naives_bayes.py</code>
+<code>winpty python naives_bayes.py</code>
 
-<code>Winpty python decision_tree.py </code>
+<code>winpty python decision_tree.py </code>
+
+<code>winpty python SVM.py</code>
 
 <b> Accuracy : </b>
 
-Highest accuracy obtained so far equals 0.94 found it with decision tree method. 
+Highest accuracy obtained so far equals 0.96 found it with SVM method. 
 
 
 
