@@ -1,22 +1,22 @@
-Machine learning techniques to identify Phishing URLs
+<h1> Machine learning techniques to identify Phishing URLs </h1>
 
 The aim of this project is to use classification methods to identify phishing URLs. We will compare as many methods as possible in order to find the method that gives the highest accuracy.   
 
-Dataset :
+DatasetÂ :
 
-Dataset : https://archive.ics.uci.edu/ml/datasets/phishing+websites 
+DatasetÂ : https://archive.ics.uci.edu/ml/datasets/phishing+websites 
 
-Environment : 
+EnvironmentÂ : 
 
 We will be using Python 2.7.14 and Scikit-learn library.
 
-Running the code :
+Running the codeÂ :
 
 Winpty python naives_bayes.py
 
 Winpty python decision_tree.py 
 
-Accuracy : 
+AccuracyÂ : 
 
 Highest accuracy obtained so far equals 0.94 found it with decision tree method. 
 
