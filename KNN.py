@@ -1,6 +1,5 @@
-from sklearn import svm
+from sklearn.neighbors import KNeighborsClassifier
 import pickle
-from time import time
 import numpy as np
 from lib import *
 
@@ -47,19 +46,10 @@ from sklearn.model_selection import train_test_split
 feature_train, feature_test, target_train, target_test = train_test_split(url_features, url_labels, test_size=0.1, random_state=42)
 
 
-clf = svm.SVC(gamma='scale',kernel='rbf',C=100000)
-t0 = time()
-clf.fit(feature_train, target_train) 
-print "training time :",round(time()-t0, 3), "s" 
 
-"""SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
-    decision_function_shape='ovr', degree=3, gamma='scale', kernel='linear',
-    max_iter=-1, probability=False, random_state=None, shrinking=True,
-    tol=0.001, verbose=False)
-"""
+neigh = KNeighborsClassifier(n_neighbors=5,algorithm='kd_tree')
+neigh.fit(feature_train, target_train) 
 
-t1 = time()
-pred = clf.predict(feature_test)
-print "predicting time :",round(time()-t1, 3), "s"
+pred = neigh.predict(feature_test)
 
 print calculate_accuracy(pred,target_test)
