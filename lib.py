@@ -1,6 +1,8 @@
 import sys
 import pickle
 import numpy as np
+from sklearn.metrics import recall_score
+from sklearn.metrics import precision_score
 
 def featureFormat( dictionary, features, remove_NaN=True, remove_all_zeroes=True, remove_any_zeroes=False, sort_keys = False):
     
@@ -71,3 +73,11 @@ def calculate_accuracy(pred,target_test) :
 	from sklearn.metrics import accuracy_score
 	accuracy = accuracy_score(pred, target_test)
 	return accuracy
+
+def calculate_recall(target_test,pred) :
+	return recall_score(target_test, pred)
+
+
+def calculate_precision(target_test,pred) : 
+
+	return precision_score(target_test, pred, average='macro') 

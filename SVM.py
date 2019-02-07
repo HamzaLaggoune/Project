@@ -59,11 +59,16 @@ joblib.dump(clf, 'SVM_model.pk1', compress=9)
     max_iter=-1, probability=False, random_state=None, shrinking=True,
     tol=0.001, verbose=False)
 """
-
 t1 = time()
 pred = clf.predict(feature_test)
+
+ 
+print "Recall score : ",calculate_recall(target_test, pred)
+
+
+print "Precision score : ",calculate_precision(target_test, pred)
 
 
 print "predicting time :",round(time()-t1, 3), "s"
 
-print calculate_accuracy(pred,target_test)
+print "Accuracy score ",calculate_accuracy(pred,target_test)
