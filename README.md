@@ -25,11 +25,12 @@ Depending on the algorithm you want to use :
 <h3> Performance evaluation  : </h3>
 
 I'm using three metrics to evaluate the performance of the classifiers. 
-<b>First : Accuracy <b>
+
+<b>First : Accuracy </b>
   
 Highest accuracy obtained so far equals 0.96 found it with SVM method. 
 
-<b>Second : Recall <b>
+<b>Second : Recall </b>
 
 Recall answers the following question : Assuming I know the URL tested is a phishing URL, what's the probability that the classifier identifies it as being a phishing URL ?
 
@@ -37,6 +38,8 @@ If you prefer :
 
 Recall = True positives / (True positives + False negatives)
 
-<b>Third : Precision <b>
+<b>Third : Precision </b>
 
 Precision answers the question : If my classifier predicts a URL as being a phishing URL, what's the probability that the URL is for real a phishing URL ?
+
+Precision = True positives / (True positives + False positives) 
