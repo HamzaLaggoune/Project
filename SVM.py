@@ -4,7 +4,7 @@ from time import time
 import numpy as np
 from lib import *
 import joblib 
-
+from sklearn.model_selection import KFold
 
 dictionary = pickle.load( open("dataset_dict.pickle", "r") )
 
@@ -38,11 +38,38 @@ vec = featureFormat(dictionary,features_list)
  
 url_features, url_labels= targetFeatureSplit(vec)
 
+
+ 
+
+#clf = svm.SVC(gamma='scale',kernel='rbf',C=1000)
+ 
+# kf = KFold(n_splits=7)
+# best_accuracy = 0
+
+# for train_index, test_index in kf.split(url_features):
+# 	X_train, Y_train, X_test, Y_test = split_data(train_index,test_index,url_features,url_labels)
+# 	clf.fit(X_train, Y_train)
+# 	pred = clf.predict(X_test)
+# 	current_accuracy = calculate_accuracy(pred,Y_test)
+# 	print current_accuracy
+# 	#  best_accuracy ==0 means it's the first iteration so we export the model 
+# 	if best_accuracy ==0 :
+# 		best_accuracy = current_accuracy	
+# 		joblib.dump(clf, 'SVM_model_improved.pk1', compress=9)
+# 	# than if in this iteration the split allows our classifier to get a better performance than we update the exported version 
+# 	elif best_accuracy < current_accuracy :
+# 		best_accuracy = current_accuracy
+# 		joblib.dump(clf, 'SVM_model_improved.pk1', compress=9)
+
+# print "best accuracy : ",best_accuracy
+   	
 from sklearn.model_selection import train_test_split
 feature_train, feature_test, target_train, target_test = train_test_split(url_features, url_labels, test_size=0.1, random_state=42)
 
+
+
 # loading the model since it's ready. SVM model has been created with lines 49-53 
-clf  = joblib.load('SVM_model.pk1')
+clf  = joblib.load('SVM_model_improved.pk1')
 
 ######### remove the comments in the following lines to create, train and export the SVM model
 """
@@ -59,7 +86,7 @@ joblib.dump(clf, 'SVM_model.pk1', compress=9)
     max_iter=-1, probability=False, random_state=None, shrinking=True,
     tol=0.001, verbose=False)
 """
-t1 = time()
+# t1 = time()
 pred = clf.predict(feature_test)
 
  
@@ -69,6 +96,6 @@ print "Recall score : ",calculate_recall(target_test, pred)
 print "Precision score : ",calculate_precision(target_test, pred)
 
 
-print "predicting time :",round(time()-t1, 3), "s"
+#print "predicting time :",round(time()-t1, 3), "s"
 
 print "Accuracy score ",calculate_accuracy(pred,target_test)

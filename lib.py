@@ -81,3 +81,21 @@ def calculate_recall(target_test,pred) :
 def calculate_precision(target_test,pred) : 
 
 	return precision_score(target_test, pred, average='macro') 
+
+def split_data(train_index,test_index,X,Y) :
+		X_train = [] 
+		Y_train = []
+		X_test  = []
+		Y_test  = []
+		
+		# create training data
+		for i in train_index :
+			X_train.append(X[i])
+			Y_train.append(Y[i])
+			
+		for j in test_index :
+			X_test.append(X[j])
+			Y_test.append(Y[j])
+		
+
+		return X_train, Y_train,X_test, Y_test
