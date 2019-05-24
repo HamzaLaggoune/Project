@@ -95,41 +95,45 @@ url_features, url_labels= targetFeatureSplit(vec)
 
 # print "best accuracy : ",best_accuracy
    	
-from sklearn.feature_selection import SelectKBest, chi2,f_classif
-selector = SelectKBest(score_func=f_classif, k=25)
-selector.fit_transform(url_features, url_labels)
+#from sklearn.feature_selection import SelectKBest, chi2,f_classif
+#selector = SelectKBest(score_func=f_classif, k=25)
+#selector.fit_transform(url_features, url_labels)
 #print("selected index:",selector.get_support(True))
-X_train_new = selector.transform(url_features)
+#X_train_new = selector.transform(url_features)
 
-# from sklearn.model_selection import train_test_split
-# feature_train, feature_test, target_train, target_test = train_test_split(X_train_new, url_labels, test_size=0.1, random_state=42)
+from sklearn.model_selection import train_test_split
+#feature_train, feature_test, target_train, target_test = train_test_split(X_train_new, url_labels, test_size=0.1, random_state=42)
+feature_train, feature_test, target_train, target_test = train_test_split(url_features, url_labels, test_size=0.1, random_state=42)
+
+clf = svm.SVC(gamma='scale',kernel='rbf',C=100)
+clf.fit(feature_train, target_train) 
+pred = clf.predict(feature_test)
+print "Accuracy score ",calculate_accuracy(pred,target_test)
+print "Recall score : ",calculate_recall(target_test, pred)
+print "Precision score : ",calculate_precision(target_test, pred)
+
+
 
 # clf = svm.SVC(gamma='scale',kernel='rbf',C=1000)
-# clf.fit(feature_train, target_train) 
-# pred = clf.predict(feature_test)
-# print "Accuracy score ",calculate_accuracy(pred,target_test)
+# kf = KFold(n_splits=7)
+# best_accuracy = 0
 
+# for train_index, test_index in kf.split(X_train_new):
+# 	X_train, Y_train, X_test, Y_test = split_data(train_index,test_index,X_train_new,url_labels)
+# 	clf.fit(X_train, Y_train)
+# 	pred = clf.predict(X_test)
+# 	current_accuracy = calculate_accuracy(pred,Y_test)
+# 	print current_accuracy
+# 	#  best_accuracy ==0 means it's the first iteration so we export the model 
+# 	if best_accuracy ==0 :
+# 		best_accuracy = current_accuracy	
+# 		joblib.dump(clf, 'SVM_model_improved_second.pk1', compress=9)
+# 	# than if in this iteration the split allows our classifier to get a better performance than we update the exported version 
+# 	elif best_accuracy < current_accuracy :
+# 		best_accuracy = current_accuracy
+# 		joblib.dump(clf, 'SVM_model_improved_second.pk1', compress=9)
 
-clf = svm.SVC(gamma='scale',kernel='rbf',C=1000)
-kf = KFold(n_splits=7)
-best_accuracy = 0
-
-for train_index, test_index in kf.split(X_train_new):
-	X_train, Y_train, X_test, Y_test = split_data(train_index,test_index,X_train_new,url_labels)
-	clf.fit(X_train, Y_train)
-	pred = clf.predict(X_test)
-	current_accuracy = calculate_accuracy(pred,Y_test)
-	print current_accuracy
-	#  best_accuracy ==0 means it's the first iteration so we export the model 
-	if best_accuracy ==0 :
-		best_accuracy = current_accuracy	
-		joblib.dump(clf, 'SVM_model_improved_second.pk1', compress=9)
-	# than if in this iteration the split allows our classifier to get a better performance than we update the exported version 
-	elif best_accuracy < current_accuracy :
-		best_accuracy = current_accuracy
-		joblib.dump(clf, 'SVM_model_improved_second.pk1', compress=9)
-
-print "best accuracy : ",best_accuracy
+# print "best accuracy : ",best_accuracy
 
 # loading the model since it's ready. SVM model has been created with lines 49-53 
 #clf  = joblib.load('SVM_model_improved.pk1')

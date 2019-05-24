@@ -50,4 +50,7 @@ clf.fit(feature_train, target_train)
 pred = clf.predict(feature_test)
 
 print calculate_accuracy(pred,target_test)
+print "Recall score : ",calculate_recall(target_test, pred)
+print "Precision score : ",calculate_precision(target_test, pred)
+
 

@@ -71,7 +71,7 @@ def targetFeatureSplit( data ):
 
 def calculate_accuracy(pred,target_test) :
 	from sklearn.metrics import accuracy_score
-	accuracy = accuracy_score(pred, target_test)
+	accuracy = accuracy_score(target_test,pred)
 	return accuracy
 
 def calculate_recall(target_test,pred) :

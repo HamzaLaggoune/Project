@@ -43,17 +43,7 @@ features_list = ['Result',
 
 
 Sbs = SBS()
-Sbs.Sbs_Method()
-
-# temp_features = [1] * 30
-# temp_features[2] = 0
-# features_list_second = []
-# i = 0 
-# for e in temp_features :
-# 	if e != 0 :
-# 		features_list_second.append(features_list[i])
-# 	i+=1 
-# print len(features_list_second)
+Sbs.Sls_method()
 
 
 """

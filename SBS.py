@@ -1,14 +1,17 @@
 import random
 import joblib 
 import pickle
+import random
 from sklearn import svm
 from lib import *
 from sklearn.model_selection import train_test_split
 dictionary = pickle.load( open("dataset_dict.pickle", "r") )
 
 class SBS:
+
   #list of all features initialy 
   features_vector = [1] * 31
+  my_current_features = features_vector
   #contains all features initialy 
   features_list = ['Result', 
 					'URL_Length',
@@ -75,7 +78,7 @@ class SBS:
   	return temp_features_list
 
   def create_evaluate_model(self,feature_train,target_train,feature_test,target_test) :
-  	clf = svm.SVC(gamma='scale',kernel='rbf',C=10)
+  	clf = svm.SVC(gamma='scale',kernel='rbf',C=1000)
 	clf.fit(feature_train, target_train) 
 	#print "training time :",round(time()-t0, 3), "s" 
 	#joblib.dump(clf, 'SVM_by_SBS.pk1', compress=9)
@@ -91,7 +94,7 @@ class SBS:
 	max_accuracy = self.create_evaluate_model(feature_train,target_train,feature_test,target_test)	
 	print "this is first : "+ str(max_accuracy)
 
-	for i in range(1,100) :
+	for i in range(1,15) :
 
   		#feature is chosen randomly 
 		feature = self.random_feature_position()
@@ -104,6 +107,7 @@ class SBS:
 		url_features, url_labels= targetFeatureSplit(vec)
 		feature_train, feature_test, target_train, target_test = train_test_split(url_features, url_labels, test_size=0.1, random_state=42)
 		new_accuracy = self.create_evaluate_model(feature_train,target_train,feature_test,target_test)
+		
 		if new_accuracy >= max_accuracy :
 			max_accuracy = new_accuracy
 		else :
@@ -112,6 +116,79 @@ class SBS:
 	print self.features_vector
 	print max_accuracy
 
+  def randomSolution(self,features) :
+	position = self.random_feature_position()
+	
+	if features[position] == 0 :
+		features[position] =1
+	else :
+		features[position] =0
+
+
+ 	return features
+
+  def Sls_method(self) : 
+  	Wp = 0.61 
+  	attempsNotImprouving = 5
+  	keepSearching = True 
+
+ 	vec = featureFormat(dictionary,self.features_list) 
+	url_features, url_labels= targetFeatureSplit(vec)
+	feature_train, feature_test, target_train, target_test = train_test_split(url_features, url_labels, test_size=0.1, random_state=42)
+	max_accuracy = self.create_evaluate_model(feature_train,target_train,feature_test,target_test)	
+	print "this is first : "+ str(max_accuracy)
+	print self.my_current_features
+	# retreive value of vector
+	current_features = self.features_vector
+	print "*********************************"
+	
+
+	while(attempsNotImprouving != 0) :
+		# Generate a random number 
+		temp = random.uniform(0, 1)
+	
+		if(temp < Wp) :
+			#Just any random solution
+			self.my_current_features = self.randomSolution(self.my_current_features)
+			list_attributes = self.build_features_list(current_features)
+			vec = featureFormat(dictionary,list_attributes) 
+			url_features, url_labels= targetFeatureSplit(vec)
+			feature_train, feature_test, target_train, target_test = train_test_split(url_features, url_labels, test_size=0.1, random_state=42)
+			new_accuracy = self.create_evaluate_model(feature_train,target_train,feature_test,target_test)
+			print new_accuracy
+
+			if (new_accuracy < max_accuracy) :
+				max_accuracy = new_accuracy
+				attempsNotImprouving -=1
+			else : 
+				max_accuracy = new_accuracy
+
+				
+					
+
+		else :
+			#it has to be an improuved solution
+			FoundBetterSoultion = False 
+
+
+			while(not FoundBetterSoultion) :
+				current_features = self.randomSolution(self.my_current_features)
+				list_attributes = self.build_features_list(current_features)
+				vec = featureFormat(dictionary,list_attributes) 
+				url_features, url_labels= targetFeatureSplit(vec)
+				feature_train, feature_test, target_train, target_test = train_test_split(url_features, url_labels, test_size=0.1, random_state=42)
+				new_accuracy = self.create_evaluate_model(feature_train,target_train,feature_test,target_test)
+				if(new_accuracy >= max_accuracy) :
+					self.my_current_features = current_features
+					max_accuracy = new_accuracy
+					FoundBetterSoultion = True 
+				else : 
+					attempsNotImprouving -=1
+					if (attempsNotImprouving == 0) :
+		
+						FoundBetterSoultion = True
+		print (self.my_current_features)
+		print max_accuracy					
 
 
 
