@@ -39,10 +39,10 @@ features_list = ['Result',
 					'double_slash_redirecting',
 					'Prefix_Suffix',
 					'having_Sub_Domain',
-					'SSLfinal_State',
+					'SSLfinal_State',#1*
 					'Domain_registeration_length',
 					'Favicon',
-					'port',
+					'port',#2*
 					'HTTPS_token',
 					'Request_URL',
 					'URL_of_Anchor' ,
@@ -50,17 +50,17 @@ features_list = ['Result',
 					'SFH',
 					'Submitting_to_email',
 					'Abnormal_URL',
-					'Redirect',
-					'on_mouseover',
-					'RightClick',
-					'popUpWidnow',
+					'Redirect',#*3 à ajouter 
+					'on_mouseover', #*4
+					'RightClick',#*5
+					'popUpWidnow',#*6
 					'Iframe',
 					'age_of_domain',
 					'DNSRecord',
 					'web_traffic',
-					'Page_Rank',
+					'Page_Rank',#*7 à ajouter 
 					'Google_Index',
-					'Links_pointing_to_page',
+					'Links_pointing_to_page',#*8 à ajouter 
 					'Statistical_report',
 					'having_IP_Address']
  

@@ -3,6 +3,8 @@ import joblib
 import pickle
 import random
 from sklearn import svm
+from sklearn.naive_bayes import GaussianNB
+from sklearn import tree
 from lib import *
 from sklearn.model_selection import train_test_split
 dictionary = pickle.load( open("dataset_dict.pickle", "r") )
@@ -78,11 +80,24 @@ class SBS:
   	return temp_features_list
 
   def create_evaluate_model(self,feature_train,target_train,feature_test,target_test) :
-  	clf = svm.SVC(gamma='scale',kernel='rbf',C=1000)
+ 	clf = svm.SVC(gamma='scale',kernel='rbf',C=10)
 	clf.fit(feature_train, target_train) 
+	
+	#************************************
+	#clf = tree.DecisionTreeClassifier(min_samples_split = 40)
+	#clf.fit(feature_train, target_train)
+	#pred = clf.predict(feature_test)
+
+	#***************************************
+
+	# clf = GaussianNB()
+	# clf.fit(feature_train, target_train)
+	# pred = clf.predict(feature_test)
+
 	#print "training time :",round(time()-t0, 3), "s" 
 	#joblib.dump(clf, 'SVM_by_SBS.pk1', compress=9)
 	pred = clf.predict(feature_test)
+  	
   	return calculate_precision(target_test, pred)
 
 
@@ -94,7 +109,7 @@ class SBS:
 	max_accuracy = self.create_evaluate_model(feature_train,target_train,feature_test,target_test)	
 	print "this is first : "+ str(max_accuracy)
 
-	for i in range(1,15) :
+	for i in range(1,50) :
 
   		#feature is chosen randomly 
 		feature = self.random_feature_position()
@@ -127,15 +142,51 @@ class SBS:
 
  	return features
 
+
+  def neighbour(self,features,pos) :
+	if features[pos] == 1 :
+		features[pos] =0
+	else :
+		features[pos] =1
+	
+	return features
+
+  def best_neighbour(self,pbest) :
+
+
+			for i in range(8) :
+				temp_features = self.my_current_features
+				temp_features = self.neighbour(temp_features,i)
+
+				list_attributes = self.build_features_list(temp_features)
+
+				vec = featureFormat(dictionary,list_attributes) 
+				url_features, url_labels= targetFeatureSplit(vec)
+				
+				feature_train, feature_test, target_train, target_test = train_test_split(url_features, url_labels, test_size=0.1, random_state=42)
+				new_accuracy = self.create_evaluate_model(feature_train,target_train,feature_test,target_test)
+				
+				if(new_accuracy >= pbest) :
+					self.my_current_features = temp_features
+					pbest = new_accuracy
+		
+
+			return pbest
+
+
+
+
+
   def Sls_method(self) : 
   	Wp = 0.61 
   	attempsNotImprouving = 5
-  	keepSearching = True 
+  
 
  	vec = featureFormat(dictionary,self.features_list) 
 	url_features, url_labels= targetFeatureSplit(vec)
 	feature_train, feature_test, target_train, target_test = train_test_split(url_features, url_labels, test_size=0.1, random_state=42)
 	max_accuracy = self.create_evaluate_model(feature_train,target_train,feature_test,target_test)	
+	pbest = max_accuracy
 	print "this is first : "+ str(max_accuracy)
 	print self.my_current_features
 	# retreive value of vector
@@ -155,7 +206,7 @@ class SBS:
 			url_features, url_labels= targetFeatureSplit(vec)
 			feature_train, feature_test, target_train, target_test = train_test_split(url_features, url_labels, test_size=0.1, random_state=42)
 			new_accuracy = self.create_evaluate_model(feature_train,target_train,feature_test,target_test)
-			print new_accuracy
+			#print new_accuracy
 
 			if (new_accuracy < max_accuracy) :
 				max_accuracy = new_accuracy
@@ -168,27 +219,16 @@ class SBS:
 
 		else :
 			#it has to be an improuved solution
-			FoundBetterSoultion = False 
-
-
-			while(not FoundBetterSoultion) :
-				current_features = self.randomSolution(self.my_current_features)
-				list_attributes = self.build_features_list(current_features)
-				vec = featureFormat(dictionary,list_attributes) 
-				url_features, url_labels= targetFeatureSplit(vec)
-				feature_train, feature_test, target_train, target_test = train_test_split(url_features, url_labels, test_size=0.1, random_state=42)
-				new_accuracy = self.create_evaluate_model(feature_train,target_train,feature_test,target_test)
-				if(new_accuracy >= max_accuracy) :
-					self.my_current_features = current_features
-					max_accuracy = new_accuracy
-					FoundBetterSoultion = True 
-				else : 
-					attempsNotImprouving -=1
-					if (attempsNotImprouving == 0) :
-		
-						FoundBetterSoultion = True
-		print (self.my_current_features)
-		print max_accuracy					
+			
+			neighbour_accuracy = self.best_neighbour(pbest)
+			if(neighbour_accuracy <= pbest): 
+				attempsNotImprouving -=1
+			else :
+				attempsNotImprouving = 0
+				pbest = neighbour_accuracy
+						
+	print (self.my_current_features)
+	print pbest			
 
 
 

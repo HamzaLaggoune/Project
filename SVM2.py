@@ -41,8 +41,8 @@ features_list = ['Result',
 					'Statistical_report',
 					'having_IP_Address']
 
-
 Sbs = SBS()
+#Sbs.Sbs_Method()
 Sbs.Sls_method()
 
 
